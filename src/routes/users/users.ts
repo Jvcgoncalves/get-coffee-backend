@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import UserControler from "../../controllers/users_controller/UsersController";
 import { userResponses } from "../../responses/UserResponses/UserResponses";
+import jwt from 'jsonwebtoken';
 
 const usersRouter = express.Router();
 
@@ -36,8 +37,14 @@ usersRouter.post("/login", async (req: Request,res: Response) => {
       res.status(500).json(response); 
       return; 
     }
+    console.log(process.env.JWT_SECRET)
+    const token = jwt.sign(
+      { userId: response.userId, email },  // Payload: the data you want to include in the token
+      process.env.JWT_SECRET,                               // Secret key to sign the token
+      { expiresIn: '1h' }                       // Token expires in 1 hour
+    )
 
-    res.status(200).json(response.userId);
+    res.status(200).json({ userId: response.userId, token });
   } catch (err) {
     res.status(500).json({ code: 500, message: err.message });
   }

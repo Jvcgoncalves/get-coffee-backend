@@ -4,6 +4,9 @@ import usersRouter from './routes/users/users';
 import productsRouter from './routes/products/products';
 import ordersRouter from './routes/orders/orders';
 const cors = require("cors");
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 startMongo();
 
