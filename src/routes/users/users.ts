@@ -22,7 +22,7 @@ usersRouter.post("/new", async (req: Request, res: Response) => {
 })
 
 usersRouter.post("/login", async (req: Request,res: Response) => {
-  const { email, password } = req.body
+  const { email, password } = req.body;
   
   try {
     if (!email || !password) {
@@ -30,16 +30,70 @@ usersRouter.post("/login", async (req: Request,res: Response) => {
       return;
     }
 
-    const response = await UserControler.validateLogin({email, password})
+    const response = await UserControler.validateLogin({email, password});
     
-    if (!response.user) {
+    if (!response.userId) {
       res.status(500).json(response); 
       return; 
     }
 
-    res.status(200).json(response.user._id)
+    res.status(200).json(response.userId);
   } catch (err) {
     res.status(500).json({ code: 500, message: err.message });
+  }
+})
+
+usersRouter.get("/:userId", async (req: Request, res: Response) => {
+  const userId = req.params['userId'];
+
+  try {
+    const response = await UserControler.getUserData({ userId });
+
+    if (!response.user) {
+      res.status(400).json(response)
+      return;
+    }
+
+    if (response.code === userResponses.USER_NOT_FOUND.code) {
+      res.status(404).json(response)
+      return;
+    }
+    
+    res.status(200).json(response)
+  } catch (error) {
+    res.status(500).json({ code: 500, message: error.message });
+  }
+})
+
+usersRouter.put("/edit/:userId", async (req: Request, res: Response) => {
+  const userId = req.params['userId'];
+  const data = req.body['data']
+  try {
+    const response = await UserControler.updateUser({ userId, data });
+    
+    if (response.code === userResponses.USER_ID_REQUIRED.code) {
+      res.status(400).json(response)
+      return;
+    }
+
+    if (response.code === userResponses.USER_NOT_FOUND.code) {
+      res.status(404).json(response)
+      return;
+    }
+    
+    res.status(200).json(response)
+  } catch (error) {
+    res.status(500).json({ code: 500, message: error.message });
+  }
+})
+
+usersRouter.delete("/delete/:userId", (req: Request, res: Response) => {
+  const userId = req.params['userId'];
+
+  try {
+    
+  } catch (error) {
+    res.status(500).json({ code: 500, message: error.message });
   }
 })
 
