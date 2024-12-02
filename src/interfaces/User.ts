@@ -7,4 +7,5 @@ export default interface IUser extends Document {
   password: string;
   cart: mongoose.Types.ObjectId[];
   orders: mongoose.Types.ObjectId[];
+  salt: string;
 }

@@ -8,9 +8,9 @@
       "moduleResolution": "Node",
       "sourceMap": true,
       "outDir": "api",
-      "baseUrl": ".",
+      "baseUrl": "./src",
       "paths": {
-        "*": ["node_modules/*"]
+        "*": ["node_modules/*"],
       }
   },
   "include": ["./"]
