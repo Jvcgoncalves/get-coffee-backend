@@ -40,7 +40,7 @@ usersRouter.post("/login", async (req: Request,res: Response) => {
       return; 
     }
 
-    const userToken = "Bearer " + generateUserSecret(process.env.BASE_JWT_SECRET, response.user.id, response.user.salt);
+    const userToken = generateUserSecret(process.env.BASE_JWT_SECRET, response.user.id, response.user.salt);
 
     const token = jwt.sign(
       { userId: response.user.id, email },
@@ -52,7 +52,7 @@ usersRouter.post("/login", async (req: Request,res: Response) => {
   } catch (err) {
     res.status(500).json({ code: 500, message: err.message });
   }
-})
+});
 
 usersRouter.get("/:userId", authenticateJwt, async (req: Request, res: Response) => {
   const userId = req.params['userId'];
@@ -61,20 +61,20 @@ usersRouter.get("/:userId", authenticateJwt, async (req: Request, res: Response)
     const response = await UserControler.getUserData({ userId });
 
     if (!response.user) {
-      res.status(400).json(response)
+      res.status(400).json(response);
       return;
     }
 
     if (response.code === userResponses.USER_NOT_FOUND.code) {
-      res.status(404).json(response)
+      res.status(404).json(response);
       return;
     }
     
-    res.status(200).json(response)
+    res.status(200).json(response);
   } catch (error) {
     res.status(500).json({ code: 500, message: error.message });
   }
-})
+});
 
 usersRouter.put("/edit/:userId", authenticateJwt, async (req: Request, res: Response) => {
   const userId = req.params['userId'];
@@ -83,20 +83,20 @@ usersRouter.put("/edit/:userId", authenticateJwt, async (req: Request, res: Resp
     const response = await UserControler.updateUser({ userId, data });
     
     if (response.code === userResponses.USER_ID_REQUIRED.code) {
-      res.status(400).json(response)
+      res.status(400).json(response);
       return;
     }
 
     if (response.code === userResponses.USER_NOT_FOUND.code) {
-      res.status(404).json(response)
+      res.status(404).json(response);
       return;
     }
     
-    res.status(200).json(response)
+    res.status(200).json(response);
   } catch (error) {
     res.status(500).json({ code: 500, message: error.message });
   }
-})
+});
 
 usersRouter.delete("/delete/:userId", authenticateJwt, async (req: Request, res: Response) => {
   const userId = req.params['userId'];
@@ -105,17 +105,19 @@ usersRouter.delete("/delete/:userId", authenticateJwt, async (req: Request, res:
     const response = await UserControler.deleteUser({ userId });
     
     if (response.code === userResponses.USER_ID_REQUIRED.code) {
-      res.status(400).json(response)
+      res.status(400).json(response);
       return;
     }
 
     if (response.code === userResponses.USER_NOT_FOUND.code) {
-      res.status(404).json(response)
+      res.status(404).json(response);
       return;
     }
+
+    res.status(200).json(response);
   } catch (error) {
     res.status(500).json({ code: 500, message: error.message });
   }
-})
+});
 
 export default usersRouter;

@@ -64,6 +64,7 @@ export default class UserControler {
 
     try {
       const responseFromMongo = await UserModel.findOneAndUpdate({ _id: userId }, { $set: data }, { new: true, runValidators: true, select: 'username email password' })
+      console.log(responseFromMongo)
 
       if (!responseFromMongo) {
         return userResponses.USER_NOT_FOUND;
@@ -91,9 +92,7 @@ export default class UserControler {
         return userResponses.USER_NOT_FOUND;
       }
   
-      const mongoResponse = UserModel.findByIdAndDelete(userId);
-
-      console.log({mongoResponse});
+      await UserModel.findByIdAndDelete(userId);
       
       return { ...userResponses.USER_DELETED };
     } catch (error) {

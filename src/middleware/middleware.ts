@@ -16,25 +16,22 @@ export async function authenticateJwt(request: any, response: any, next: any) {
   }
 
   try {
-    // Decode the token without verifying to extract userId and salt
     const decoded: any = jwt.decode(token);
 
     if (!decoded || !decoded.userId || !decoded.email) {
       return response.status(401).json({ message: 'Invalid token payload' });
     }
 
-    // Retrieve the salt from your user record, based on userId
-    const user = await UserModel.findById(decoded.userId);  // Adjust based on your data model
+    const user = await UserModel.findById(decoded.userId);
     if (!user) {
       return response.status(401).json({ message: 'User not found' });
     }
 
-    const userSecret = generateUserSecret(process.env.BASE_JWT_SECRET, decoded.userId, user.salt);
+    const userSecret = generateUserSecret(process.env.BASE_JWT_SECRET, user._id, user.salt);
 
-    // Now verify the token with the user-specific secret
-    jwt.verify(token, userSecret);
+    console.log("36", jwt.verify(token, userSecret));
+    console.log({token, userSecret})
 
-    // Attach user data to the request for further use
     request.user = decoded;
 
     next();
