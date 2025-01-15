@@ -6,4 +6,5 @@ export default interface IProduct extends Document {
   imageUrl: string;
   value: number;
   discount: number;
+  reviews: mongoose.Types.ObjectId[];
 }

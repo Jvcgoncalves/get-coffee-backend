@@ -5,6 +5,7 @@ import productsRouter from './routes/products/products';
 import ordersRouter from './routes/orders/orders';
 const cors = require("cors");
 import dotenv from 'dotenv';
+import { authenticateJwt } from './middleware/middleware';
 
 dotenv.config();
 
@@ -17,7 +18,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/users", usersRouter);
-// app.use("/products/", productsRouter);
+app.use("/products/", authenticateJwt, productsRouter);
 // app.use("/orders/", ordersRouter);
 
 app.use("/", (req: Request, res: Response) => {

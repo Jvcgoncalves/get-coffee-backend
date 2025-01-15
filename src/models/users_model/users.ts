@@ -8,16 +8,12 @@ const UserSchema: Schema = new Schema<IUser>({
   email: { type: String, required: true },
   password: { type: String, required: true },
   salt: { type: String, required: false },
-  cart: [
-    {
-      productId: { type: mongoose.Schema.Types.ObjectId, ref: "products", required: true }
-    }
-  ],
-  orders: [
-    {
-      orderId: { type: mongoose.Schema.Types.ObjectId, ref: "orders", required: true }
-    }
-  ],
+  cart:  [{
+    type: String
+  }],
+  orders: [{
+    type: String
+  }]
 })
 
 UserSchema.pre('save', async function(next) {
